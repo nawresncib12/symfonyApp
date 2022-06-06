@@ -5,10 +5,8 @@ namespace App\Controller;
 use App\Entity\Pet;
 use Doctrine\Persistence\ManagerRegistry;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
-use Symfony\Component\HttpFoundation\Response;
-use Symfony\Component\Serializer\SerializerInterface;
+use App\Service\ResponseService;
 use Symfony\Component\Routing\Annotation\Route;
-use Symfony\Component\Serializer\Encoder\JsonEncoder;
 
 use Symfony\Component\HttpFoundation\Request;
 
@@ -18,7 +16,7 @@ class PetController extends AbstractController
 
 
     #[Route('/add', name: 'pets.add')]
-    public function addPet(ManagerRegistry $doctrine, SerializerInterface $serializer)
+    public function addPet(ManagerRegistry $doctrine,  ResponseService $respServ)
     {
         $entityManager = $doctrine->getManager();
         $pet = new Pet();
@@ -26,14 +24,10 @@ class PetController extends AbstractController
         $pet->setType("cat");
         $entityManager->persist($pet);
         $entityManager->flush();
-        return new Response(
-            $serializer->serialize($pet, JsonEncoder::FORMAT),
-            200,
-            array_merge([], ['Content-Type' => 'application/json;charset=UTF-8'])
-        );
+        return $respServ->serializeResponse($pet);
     }
     #[Route('/addSpec', name: 'pets.addSpec')]
-    public function addPetSpecial(Request $request, ManagerRegistry $doctrine, SerializerInterface $serializer)
+    public function addPetSpecial(Request $request, ManagerRegistry $doctrine,  ResponseService $respServ)
     {
         echo ($request);
         $entityManager = $doctrine->getManager();
@@ -42,10 +36,6 @@ class PetController extends AbstractController
         $pet->setType($request->request->get('type'));
         $entityManager->persist($pet);
         $entityManager->flush();
-        return new Response(
-            $serializer->serialize($pet, JsonEncoder::FORMAT),
-            200,
-            array_merge([], ['Content-Type' => 'application/json;charset=UTF-8'])
-        );
+        return $respServ->serializeResponse($pet);
     }
 }

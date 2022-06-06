@@ -3,11 +3,17 @@
 namespace App\Entity;
 
 use App\Repository\UserRepository;
+use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\Mapping as ORM;
 
 #[ORM\Entity(repositoryClass: UserRepository::class)]
 class User
 {
+
+    public function __construct()
+    {
+        $this->friends = new ArrayCollection();
+    }
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column(type: 'integer')]
@@ -22,8 +28,9 @@ class User
     #[ORM\Column(type: 'string', length: 255)]
     private $job;
 
-    #[ORM\OneToOne(targetEntity:"App\Entity\Pet")]
+    #[ORM\OneToOne(targetEntity: "App\Entity\Pet")]
     private $pet;
+
 
     public function getId(): ?int
     {
@@ -77,4 +84,5 @@ class User
 
         return $this;
     }
+  
 }

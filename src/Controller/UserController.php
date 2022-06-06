@@ -11,8 +11,6 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Annotation\Route;
 use App\Service\ResponseService;
 
-use Symfony\Component\Serializer\Encoder\JsonEncoder;
-use Symfony\Component\Serializer\SerializerInterface;
 
 #[Route('/users')]
 class UserController extends AbstractController
@@ -29,14 +27,10 @@ class UserController extends AbstractController
     ##Param converter !!
 
     #[Route('/{id<\d+>}', name: 'users.detail')]
-    public function detail(SerializerInterface $serializer, User $user = null): Response
+    public function detail(ResponseService $respServ, User $user = null): Response
     {
-        $response = new Response(
-            $serializer->serialize($user, JsonEncoder::FORMAT),
-            200,
-            array_merge([], ['Content-Type' => 'application/json;charset=UTF-8'])
-        );
-        return $response;
+
+        return $respServ->serializeResponse($user);;
     }
 
     #[Route('/add', name: 'users.add')]
