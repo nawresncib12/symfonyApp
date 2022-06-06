@@ -22,6 +22,9 @@ class User
     #[ORM\Column(type: 'string', length: 255)]
     private $job;
 
+    #[ORM\OneToOne(targetEntity:"App\Entity\Pet")]
+    private $pet;
+
     public function getId(): ?int
     {
         return $this->id;
@@ -59,6 +62,18 @@ class User
     public function setJob(string $job): self
     {
         $this->job = $job;
+
+        return $this;
+    }
+
+    public function getPet(): ?Pet
+    {
+        return $this->pet;
+    }
+
+    public function setPet(Pet $pet): self
+    {
+        $this->pet = $pet;
 
         return $this;
     }
