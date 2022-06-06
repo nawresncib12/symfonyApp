@@ -19,11 +19,11 @@ class UserController extends AbstractController
 {
 
     #[Route('/', name: 'users.list')]
-    public function getUsers(ManagerRegistry $doctrine, SerializerInterface $serializer, ResponseService $respServ)
+    public function getUsers(ManagerRegistry $doctrine, ResponseService $respServ)
     {
         $repo = $doctrine->getRepository(User::class);
         $users = $repo->findAll();
-        return $respServ->serializeResponse($users, $serializer);
+        return $respServ->serializeResponse($users);
     }
 
     ##Param converter !!
@@ -40,7 +40,7 @@ class UserController extends AbstractController
     }
 
     #[Route('/add', name: 'users.add')]
-    public function addUser(Request $request, ManagerRegistry $doctrine, SerializerInterface $serializer, ResponseService $respServ)
+    public function addUser(Request $request, ManagerRegistry $doctrine, ResponseService $respServ)
     {
         $entityManager = $doctrine->getManager();
         $repo = $doctrine->getRepository(Pet::class);
@@ -53,6 +53,6 @@ class UserController extends AbstractController
         $entityManager->persist($user);
         $entityManager->flush();
 
-        return $respServ->serializeResponse($user, $serializer);
+        return $respServ->serializeResponse($user);
     }
 }
